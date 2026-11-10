@@ -485,6 +485,128 @@
       margin-bottom: 14px;
     }
 
+    /* ---------- FAQ ---------- */
+    .faq {
+      background: var(--warm-white);
+    }
+
+    .faq-list {
+      max-width: 760px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .faq-item {
+      background: #fdf8f2;
+      border: 1px solid #efe2d7;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .faq-item:hover {
+      border-color: var(--warm-gray);
+    }
+
+    .faq-item.faq-item--open {
+      border-color: var(--terracotta);
+      box-shadow: var(--shadow-sm);
+      background: var(--beige-light);
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      font-family: inherit;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--coffee);
+      text-align: left;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .faq-question:hover {
+      color: var(--terracotta);
+    }
+
+    .faq-item.faq-item--open .faq-question {
+      color: var(--terracotta-dark);
+    }
+
+    .faq-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--beige-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: background 0.25s, transform 0.35s ease;
+    }
+
+    .faq-icon::before,
+    .faq-icon::after {
+      content: '';
+      position: absolute;
+      background: var(--terracotta);
+      border-radius: 2px;
+      transition: transform 0.35s ease, background 0.25s;
+    }
+
+    .faq-icon::before {
+      width: 14px;
+      height: 2px;
+    }
+
+    .faq-icon::after {
+      width: 2px;
+      height: 14px;
+    }
+
+    .faq-item.faq-item--open .faq-icon {
+      background: var(--terracotta);
+      transform: rotate(180deg);
+    }
+
+    .faq-item.faq-item--open .faq-icon::before,
+    .faq-item.faq-item--open .faq-icon::after {
+      background: var(--warm-white);
+    }
+
+    .faq-item.faq-item--open .faq-icon::after {
+      transform: rotate(90deg);
+    }
+
+    .faq-answer {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.35s ease;
+    }
+
+    .faq-item.faq-item--open .faq-answer {
+      grid-template-rows: 1fr;
+    }
+
+    .faq-answer-inner {
+      overflow: hidden;
+    }
+
+    .faq-answer p {
+      padding: 0 24px 22px;
+      color: #5e4d3e;
+      font-size: 0.98rem;
+    }
+
     /* ---------- ОТЗЫВЫ ---------- */
     .reviews {
       background: var(--beige-light);
@@ -932,6 +1054,49 @@
     </div>
   </section>
 
+  <!-- ========== FAQ ========== -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <h2>Частые вопросы</h2>
+      <p class="section-subtitle">Собрали ответы на то, о чём спрашивают чаще всего. Не нашли свой вопрос — напишите нам в Telegram.</p>
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            Сколько времени занимает отдача фотографий?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>В среднем 3–5 рабочих дней.</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            Можно ли прийти на съёмку с питомцем?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Конечно, мы любим животных!</p>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">
+            Есть ли в студии гримёрная зона?
+            <span class="faq-icon" aria-hidden="true"></span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">
+              <p>Да, она предоставляется бесплатно за 30 минут до начала съёмки.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== ОТЗЫВЫ ========== -->
   <section class="reviews" id="reviews">
     <div class="container">
@@ -1049,6 +1214,27 @@
           if (target) {
             e.preventDefault();
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // FAQ-аккордеон: плавное раскрытие ответов при клике на вопрос
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        question.addEventListener('click', function() {
+          const isOpen = item.classList.contains('faq-item--open');
+
+          // Закрываем все открытые вопросы (классический аккордеон)
+          faqItems.forEach(other => {
+            other.classList.remove('faq-item--open');
+            other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+
+          // Если кликнули по закрытому вопросу — открываем его
+          if (!isOpen) {
+            item.classList.add('faq-item--open');
+            question.setAttribute('aria-expanded', 'true');
           }
         });
       });
